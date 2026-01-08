@@ -778,7 +778,7 @@ export default function App() {
                   </div>
                   <div className="flex flex-col md:flex-row md:items-center md:space-x-8 space-y-2 md:space-y-0 text-white/80">
                     <span>hpcsingers@gmail.com</span>
-                    <span className="hidden md:block">♦</span>
+                    <span className="hidden md:block">●</span>
                     <span>+63 635 570 685</span>
                   </div>
                 </div>
