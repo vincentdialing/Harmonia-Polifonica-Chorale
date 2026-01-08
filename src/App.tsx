@@ -729,62 +729,67 @@ export default function App() {
 
       case 'Contact':
         return (
-          <div className="min-h-screen flex items-center justify-center px-6">
+          <div className="min-h-screen flex flex-col items-center px-6 py-20">
             <motion.div
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="w-full max-w-6xl"
+              className="w-full max-w-6xl space-y-6"
             >
-              {/* Main Glass Card Container */}
-              <motion.div variants={itemVariants} className="bg-black/60 backdrop-blur-sm rounded-2xl border border-[#FF6A00]/20 overflow-hidden">
-                
-                {/* Header Section */}
-                <div className="p-8 border-b border-[#FF6A00]/20">
-                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
-                    <h1 className="text-4xl md:text-6xl font-bold text-white">
-                      Book Us
-                    </h1>
-                    {/* Social Media Icons for Mobile/Tablet - aligned right */}
-                    <div className="flex lg:hidden space-x-4">
-                      <motion.a
-                        href="https://www.facebook.com/profile.php?id=100086396621687"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <div className="w-12 h-12 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 group-hover:border-[#FF6A00]/40 transition-all duration-300">
-                          <Facebook className="w-6 h-6 text-white group-hover:text-[#FF6A00] transition-colors duration-300" />
-                        </div>
-                      </motion.a>
+              {/* Standalone Heading */}
+              <motion.div variants={itemVariants} className="text-center">
+                <h1 className="text-4xl md:text-6xl font-bold text-white">Book Us</h1>
+              </motion.div>
 
-                      <motion.a
-                        href="https://www.instagram.com/usephpc/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <div className="w-12 h-12 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 group-hover:border-[#FF6A00]/40 transition-all duration-300">
-                          <Instagram className="w-6 h-6 text-white group-hover:text-[#FF6A00] transition-colors duration-300" />
-                        </div>
-                      </motion.a>
-                    </div>
-                  </div>
-                  <div className="flex flex-col md:flex-row md:items-center md:space-x-8 space-y-2 md:space-y-0 text-white/80">
+              {/* Contact Info Bar */}
+              <motion.div
+                variants={itemVariants}
+                className="bg-black/60 backdrop-blur-sm rounded-2xl border border-[#FF6A00]/20 px-6 py-4"
+              >
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                  {/* Contact Info - Left Side */}
+                  <div className="flex flex-col md:flex-row items-center gap-6 md:gap-12 text-white/80 text-lg text-center md:text-left">
                     <span>hpcsingers@gmail.com</span>
-                    <span className="hidden md:block">●</span>
+                    <span className="hidden md:block">•</span>
                     <span>+63 635 570 685</span>
                   </div>
-                </div>
 
+                  {/* Social Icons - Right Edge */}
+                  <div className="flex items-center gap-4">
+                    <motion.a
+                      href="https://www.facebook.com/profile.php?id=100086396621687"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <div className="w-12 h-12 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 group-hover:border-[#FF6A00]/40 transition-all duration-300">
+                        <Facebook className="w-6 h-6 text-white group-hover:text-[#FF6A00] transition-colors duration-300" />
+                      </div>
+                    </motion.a>
+                    <motion.a
+                      href="https://www.instagram.com/usephpc/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <div className="w-12 h-12 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 group-hover:border-[#FF6A00]/40 transition-all duration-300">
+                        <Instagram className="w-6 h-6 text-white group-hover:text-[#FF6A00] transition-colors duration-300" />
+                      </div>
+                    </motion.a>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Main Glass Card Container */}
+              <motion.div variants={itemVariants} className="bg-black/60 backdrop-blur-sm rounded-2xl border border-[#FF6A00]/20 overflow-hidden">
                 {/* Split Content */}
                 <div className="grid grid-cols-1 md:grid-cols-2">
                   {/* Left: Contact Form */}
-                  <div className="p-8 md:p-12">
+                  <div className="p-8 md:p-12 pb-[220px] md:pb-12">
                     <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                       {/* Name Field */}
                       <div>
@@ -903,7 +908,7 @@ export default function App() {
       </div>
       
       {/* Main Content */}
-      <div className="relative z-10 pb-28 md:pb-0">
+      <div className="relative z-10 pb-[220px] md:pb-0">
         {renderSection()}
       </div>
 
