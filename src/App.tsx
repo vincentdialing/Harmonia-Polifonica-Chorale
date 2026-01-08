@@ -791,6 +791,12 @@ export default function App() {
               {/* Standalone Heading */}
               <motion.div variants={itemVariants} className="text-center">
                 <h1 className="text-4xl md:text-6xl font-bold text-white">Book Us</h1>
+                <p className="text-base md:text-xl text-white/80 mt-4 max-w-3xl mx-auto">
+                  We would be honored to add warmth and harmony to your occasion. We bring professionalism and heart to every performance, whether it's a mass, a reception, or a corporate gathering.
+                </p>
+                <p className="text-base md:text-xl text-white/90 mt-4 max-w-3xl mx-auto font-bold">
+                  Inquire today to save your date.
+                </p>
               </motion.div>
 
               {/* Contact Info Bar */}
