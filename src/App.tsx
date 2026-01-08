@@ -13,11 +13,9 @@ function useMediaQuery(query: string) {
     const onChange = () => setMatches(mq.matches);
     onChange();
     mq.addEventListener?.('change', onChange);
-    // @ts-expect-error: Safari fallback
     mq.addListener?.(onChange);
     return () => {
       mq.removeEventListener?.('change', onChange);
-      // @ts-expect-error: Safari fallback
       mq.removeListener?.(onChange);
     };
   }, [query]);
