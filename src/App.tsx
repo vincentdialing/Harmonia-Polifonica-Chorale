@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 import { easeInOut, motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import { ImageWithFallback } from './components/figma/ImageWithFallback';
@@ -39,6 +40,55 @@ export default function App() {
     { name: 'Contact', icon: Mail },
   ];
   const navItems = nav.map(n => n.name);
+
+  // Routing helpers to keep URL in sync with section state
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const toPath = (section: string) => {
+    switch (section) {
+      case 'Home':
+        return '/';
+      case 'Highlights':
+        return '/highlights';
+      case 'About':
+        return '/about';
+      case 'Contact':
+        return '/contact';
+      default:
+        return '/';
+    }
+  };
+
+  const toSection = (pathname: string) => {
+    switch (pathname) {
+      case '/':
+      case '/home':
+        return 'Home';
+      case '/highlights':
+        return 'Highlights';
+      case '/about':
+        return 'About';
+      case '/contact':
+        return 'Contact';
+      default:
+        return 'Home';
+    }
+  };
+
+  // Set active section when URL path changes (back/forward or deep link)
+  useEffect(() => {
+    const s = toSection(location.pathname);
+    if (s !== activeSection) setActiveSection(s);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
+
+  // Update URL when section changes via UI navigation
+  useEffect(() => {
+    const p = toPath(activeSection);
+    if (location.pathname !== p) navigate(p);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeSection]);
 
     // Optional: template to send an auto-reply to the sender (set in .env if desired)
     const replyTemplateId = import.meta.env.VITE_EMAILJS_REPLY_TEMPLATE_ID;
