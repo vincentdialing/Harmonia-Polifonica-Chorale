@@ -92,6 +92,13 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSection]);
 
+  // Reset scroll position when changing sections or opening event detail
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+  }, [activeSection, selectedEventId]);
+
     // Optional: template to send an auto-reply to the sender (set in .env if desired)
     const replyTemplateId = import.meta.env.VITE_EMAILJS_REPLY_TEMPLATE_ID;
     // Optional: fallback contact address shown in the auto-reply (or leave blank to omit)
