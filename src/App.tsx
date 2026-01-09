@@ -680,7 +680,7 @@ export default function App() {
                     <div className="text-center">
                       <button
                         onClick={() => setSelectedEventId(event.id)}
-                        className="bg-[#FF6A00] hover:bg-[#FF6A00]/80 text-white px-8 py-4 rounded-full font-semibold transition-all duration-300 shadow-lg shadow-[#FF6A00]/30 hover:shadow-[#FF6A00]/50 mb-2 md:mb-6 lg:mb-8"
+                        className="border-2 border-white text-white px-8 py-4 rounded-full hover:bg-[#FF6A00] hover:border-[#FF6A00] transition-all duration-300 shadow-lg shadow-[#FF6A00]/20 font-medium mb-2 md:mb-6 lg:mb-8"
                       >
                         Click to Explore
                       </button>
