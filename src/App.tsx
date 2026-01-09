@@ -805,11 +805,11 @@ export default function App() {
                 variants={itemVariants}
                 className="bg-black/60 backdrop-blur-sm rounded-2xl border border-[#FF6A00]/20 px-6 py-8 text-center"
               >
-                <p className="text-base md:text-xl text-white/80 mb-4">
-                  We would be honored to add warmth and harmony to your occasion. We bring professionalism and heart to every performance, whether it's a mass, a reception, or a corporate gathering.
-                </p>
-                <p className="text-base md:text-xl lg:text-3xl text-white/90 font-bold">
+                <p className="text-xl md:text-3xl lg:text-5xl text-white/90 leading-tight">
                   Inquire today to save your date.
+                </p>
+                <p className="text-base md:text-lg text-white/80 mt-4">
+                  We would be honored to add warmth and harmony to your occasion. We bring professionalism and heart to every performance, whether it's a mass, a reception, or a corporate gathering.
                 </p>
               </motion.div>
 
