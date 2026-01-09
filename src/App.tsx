@@ -8,6 +8,39 @@ import { ImageWithFallback } from './components/figma/ImageWithFallback';
 import emailjs from '@emailjs/browser';
 import { Mail, Facebook, Instagram, ArrowLeft, Home, Trophy, Users } from 'lucide-react';
 
+// Map section names to URL paths
+const toPath = (section: string) => {
+  switch (section) {
+    case 'Home':
+      return '/';
+    case 'Highlights':
+      return '/highlights';
+    case 'About':
+      return '/about';
+    case 'Contact':
+      return '/contact';
+    default:
+      return '/';
+  }
+};
+
+// Map URL paths to section names
+const toSection = (pathname: string) => {
+  switch (pathname) {
+    case '/':
+    case '/home':
+      return 'Home';
+    case '/highlights':
+      return 'Highlights';
+    case '/about':
+      return 'About';
+    case '/contact':
+      return 'Contact';
+    default:
+      return 'Home';
+  }
+};
+
 // Simple media-query hook
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false);
@@ -26,7 +59,11 @@ function useMediaQuery(query: string) {
 }
 
 export default function App() {
-  const [activeSection, setActiveSection] = useState('Home');
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Initialize section from current path so reloads stay on the same page
+  const [activeSection, setActiveSection] = useState(() => toSection(location.pathname));
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
   const [userEmail, setUserEmail] = useState('');
   const [userName, setUserName] = useState('');
@@ -40,41 +77,6 @@ export default function App() {
     { name: 'Contact', icon: Mail },
   ];
   const navItems = nav.map(n => n.name);
-
-  // Routing helpers to keep URL in sync with section state
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const toPath = (section: string) => {
-    switch (section) {
-      case 'Home':
-        return '/';
-      case 'Highlights':
-        return '/highlights';
-      case 'About':
-        return '/about';
-      case 'Contact':
-        return '/contact';
-      default:
-        return '/';
-    }
-  };
-
-  const toSection = (pathname: string) => {
-    switch (pathname) {
-      case '/':
-      case '/home':
-        return 'Home';
-      case '/highlights':
-        return 'Highlights';
-      case '/about':
-        return 'About';
-      case '/contact':
-        return 'Contact';
-      default:
-        return 'Home';
-    }
-  };
 
   // Set active section when URL path changes (back/forward or deep link)
   useEffect(() => {
