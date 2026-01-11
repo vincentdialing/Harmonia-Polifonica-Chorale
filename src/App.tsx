@@ -639,9 +639,10 @@ export default function App() {
             <motion.div variants={itemVariants} className="lg:col-span-2 lg:row-span-2">
               <div className="bg-black/60 backdrop-blur-sm rounded-2xl p-6 border border-[#FF6A00]/20 h-full">
                 <motion.div 
-                  className="w-full rounded-2xl overflow-hidden mx-auto relative"
+                  className="w-full h-full rounded-2xl overflow-hidden relative"
                   style={{
-                    aspectRatio: isMobile ? '5 / 4' : '1 / 1'
+                    aspectRatio: '1 / 1',
+                    maxHeight: '100%'
                   }}
                 >
                   {/* Carousel Images with Fade */}
@@ -808,7 +809,7 @@ export default function App() {
                 <motion.div variants={itemVariants} className="relative">
                   <motion.div 
                     className="group relative w-full rounded-2xl overflow-hidden"
-                    animate={{ aspectRatio: '19 / 6' }}
+                    animate={{ aspectRatio: isMobile ? '16 / 10' : '19 / 6' }}
                     transition={{ duration: 0.6, ease: 'easeInOut' }}
                   >
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 z-10 pointer-events-none" />
