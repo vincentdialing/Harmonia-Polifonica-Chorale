@@ -8,12 +8,132 @@ import { ImageWithFallback } from './components/figma/ImageWithFallback';
 import emailjs from '@emailjs/browser';
 import { Mail, Facebook, Instagram, ArrowLeft, Home, Trophy, Users } from 'lucide-react';
 
+// Event interface
+interface Event {
+  id: number;
+  title: string;
+  award: string;
+  image: string;
+  background: string;
+  description: string;
+  stats: Array<{ label: string; value: string }>;
+  gallery: string[];
+}
+
+// Events data - must be defined before toPath function
+const highlightsEvents: Event[] = [
+  {
+    id: 1,
+    title: "Andrea O. Veneracion International Choral Festival 2025",
+    award: "Manila, Philippines",
+    image: "/images/AOV25/main.webp",
+    background: "from-black via-red-900/30 to-black",
+    description: "The 6th Andrea O. Veneracion International Choral Festival, held at the Areté in Manila, gathered 34 choirs and over 1,200 singers from around the world in a celebration of choral excellence and cultural exchange. Among the participating ensembles, Harmonia Polifonica Chorale earned distinction by receiving Double Gold Diplomas in both the Folk Song and Musica Sacra categories. Beyond the accolades, this achievement reflects the dedication and perseverance of its student-singers, who balanced academic responsibilities with rigorous artistic preparation, embodying discipline, commitment, and passion for choral music.",
+    stats: [
+      { label: "Gold Diploma", value: "Musica Sacra Category" },
+      { label: "Gold Diploma", value: "Folk Song Category" },
+    ],
+    gallery: [
+      "/images/AOV25/1.webp",
+      "/images/AOV25/2.webp",
+      "/images/AOV25/3.webp",
+      "/images/AOV25/4.webp"
+    ]
+  },
+  {
+    id: 2,
+    title: "Himig Handog International Choral Festival 2025",
+    award: "Tagum City, Philippines",
+    image: "/images/M25/main.webp",
+    background: "from-red-950 via-orange-900/40 to-black",
+    description: "The Himig Handog International Choral Competition 2025 is an international choral festival that gathers choirs from different regions to celebrate excellence in choral performance, musical interpretation, and cultural expression. The event features multiple competition categories and culminates in a Grand Prix round. During the competition, Harmonia Polifonica Chorale achieved 3rd Place in the Grand Prix and received distinctions in the Mixed and Folklore categories, including recognition for musical interpretation. The event highlighted artistic discipline, collaboration, and the shared passion of participating ensembles for choral music.",
+    stats: [
+      { label: "3rd Place", value: "Grand Prix Finals" },
+      { label: "Champion", value: "Mixed Category" },
+      { label: "Best Interpretation", value: "Mixed Category" },
+      { label: "2nd Place", value: "Folklore Category" }
+    ],
+    gallery: [
+      "/images/M25/1.webp",
+      "/images/M25/3.webp",
+      "/images/M25/2.webp",
+      "/images/M25/4.webp"
+    ]
+  },
+  {
+    id: 3,
+    title: "Himig Handog International Choral Festival 2024",
+    award: "Tagum City, Philippines",
+    image: "/images/M24/main.webp",
+    background: "from-red-950 via-orange-900/40 to-black",
+    description: "The 21st Musikahan sa Tagum Festival Himig Handog International Choir Grand Prix 2024 is a choral competition that brings together local and international choirs in a celebration of musical excellence and cultural expression. As part of the festival, participating ensembles compete in various categories, culminating in the Grand Prix Finals. Harmonia Polifonica Chorale marked its return to Musikahan sa Tagum after its last appearance in 2016, participating in the competition and earning distinctions in the Mixed and Folk categories, as well as in the Grand Prix Finals. The event highlighted the choir's renewed presence on the choral stage and its continued commitment to artistic growth and performance.",
+    stats: [
+      { label: "2nd Prize", value: "Grand Prix Finals" },
+      { label: "2nd Prize", value: "Folk Category" },
+      { label: "4th Place", value: "Mixed Category" },
+    ],
+    gallery: [
+      "/images/M24/1.webp",
+      "/images/M24/3.webp",
+      "/images/M24/2.webp",
+      "/images/M24/4.webp"
+    ]
+  },
+  {
+    id: 4,
+    title: "Andrea O. Veneracion International Choral Festival 2023",
+    award: "Makati City, Philippines",
+    image: "/images/AOV23/main.webp",
+    background: "from-red-950 via-orange-900/40 to-black",
+    description: "On July 23rd, Harmonia Polifonica Chorale marked a significant milestone as it returned to the international stage at the Andrea O. Veneracion International Choral Festival in Makati City after several years of hiatus. Competing among choirs from various regions, HPC proudly earned Gold Diplomas in both the Folk Song and Mixed Choir categories, demonstrating the choir's dedication, artistry, and resilience. This event celebrated not only the choir's musical achievements but also its successful re-emergence on the international choral scene.",
+    stats: [
+      { label: "Gold Diploma", value: "Mixed Choir Category" },
+      { label: "Gold Diploma", value: "Folk Song Category" },
+    ],
+    gallery: [
+      "/images/AOV23/1.webp",
+      "/images/AOV23/4.webp",
+      "/images/AOV23/3.webp",
+      "/images/AOV23/2.webp"
+    ]
+  },
+];
+
+// Generate URL slug from event title
+const generateEventSlug = (title: string): string => {
+  // Split title into words
+  const words = title.split(' ');
+  let slug = '';
+  
+  for (const word of words) {
+    // If it's a number (like 2025, 2024, etc), add it as-is
+    if (/^\d+$/.test(word)) {
+      slug += word;
+    } else {
+      // Otherwise, take the first letter if it's alphabetic
+      const firstChar = word.charAt(0);
+      if (/[A-Za-z]/.test(firstChar)) {
+        slug += firstChar.toUpperCase();
+      }
+    }
+  }
+  
+  return slug;
+};
+
 // Map section names to URL paths
-const toPath = (section: string) => {
+const toPath = (section: string, eventId?: number | null) => {
   switch (section) {
     case 'Home':
       return '/';
     case 'Highlights':
+      if (eventId) {
+        const event = highlightsEvents.find(e => e.id === eventId);
+        if (event) {
+          const slug = generateEventSlug(event.title);
+          return `/highlights/${slug}`;
+        }
+      }
       return '/highlights';
     case 'About':
       return '/about';
@@ -26,6 +146,11 @@ const toPath = (section: string) => {
 
 // Map URL paths to section names
 const toSection = (pathname: string) => {
+  // Check if it's an event detail page
+  if (pathname.startsWith('/highlights/')) {
+    return 'Highlights';
+  }
+  
   switch (pathname) {
     case '/':
     case '/home':
@@ -69,6 +194,7 @@ export default function App() {
   const [userName, setUserName] = useState('');
   const [userPhone, setUserPhone] = useState('');
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+  const [eventCarouselIndex, setEventCarouselIndex] = useState(0);
   const formRef = useRef<HTMLFormElement | null>(null);
   const nav = [
     { name: 'Home', icon: Home },
@@ -82,15 +208,29 @@ export default function App() {
   useEffect(() => {
     const s = toSection(location.pathname);
     if (s !== activeSection) setActiveSection(s);
+    
+    // Extract event ID from URL if it's an event detail page
+    if (location.pathname.startsWith('/highlights/')) {
+      const slug = location.pathname.split('/highlights/')[1];
+      if (slug) {
+        // Find event by matching slug
+        const event = highlightsEvents.find(e => generateEventSlug(e.title) === slug);
+        if (event && selectedEventId !== event.id) {
+          setSelectedEventId(event.id);
+        }
+      }
+    } else if (selectedEventId !== null) {
+      setSelectedEventId(null);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   // Update URL when section changes via UI navigation
   useEffect(() => {
-    const p = toPath(activeSection);
+    const p = toPath(activeSection, selectedEventId);
     if (location.pathname !== p) navigate(p);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeSection]);
+  }, [activeSection, selectedEventId]);
 
   // Reset scroll position when changing sections or opening event detail
   useEffect(() => {
@@ -394,6 +534,34 @@ export default function App() {
 
   const heroImages = highlightsEvents.map((event) => event.image);
 
+  const glassButtonClasses = "relative inline-flex items-center justify-center px-9 py-3 md:px-10 md:py-3.5 rounded-full text-base md:text-lg font-semibold text-white tracking-tight overflow-hidden backdrop-blur-md transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:ring-[#FF6A00]/80";
+  const glassButtonStyle = {
+    background: 'linear-gradient(135deg, rgba(255, 106, 0, 0.6) 0%, rgba(255, 106, 0, 0.2) 100%)',
+    border: '1px solid rgba(255, 106, 0, 0.3)',
+    boxShadow: '0 8px 32px rgba(255, 106, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.2)',
+    backdropFilter: 'blur(14px)',
+    WebkitBackdropFilter: 'blur(14px)'
+  };
+  const glassButtonHoverStyle = {
+    background: 'linear-gradient(135deg, rgba(255, 106, 0, 0.68) 0%, rgba(255, 106, 0, 0.32) 100%)',
+    boxShadow: '0 12px 40px rgba(255, 106, 0, 0.24), inset 0 1px 1px rgba(255, 255, 255, 0.28)'
+  };
+  const navContainerStyle = {
+    background: 'linear-gradient(135deg, rgba(10, 10, 10, 0.82) 0%, rgba(0, 0, 0, 0.7) 100%)',
+    border: '1px solid rgba(255, 106, 0, 0.16)',
+    boxShadow: '0 12px 32px rgba(0, 0, 0, 0.55), 0 1px 0 rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(14px)',
+    WebkitBackdropFilter: 'blur(14px)'
+  };
+  const navButtonStyle = {
+    background: 'linear-gradient(135deg, rgba(255, 120, 0, 0.75) 0%, rgba(255, 90, 0, 0.45) 100%)',
+    border: '1px solid rgba(255, 120, 0, 0.55)',
+    boxShadow: '0 8px 22px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.25)'
+  };
+  const navButtonInactiveStyle = {
+    border: '',
+  };
+
   useEffect(() => {
     if (!heroImages.length) return;
 
@@ -404,20 +572,31 @@ export default function App() {
     return () => clearInterval(interval);
   }, [heroImages.length]);
 
-  interface Event {
-    id: number;
-    title: string;
-    award: string;
-    image: string;
-    background: string;
-    description: string;
-    stats: Array<{ label: string; value: string }>;
-    gallery: string[];
-  }
+  // Event carousel effect
+  useEffect(() => {
+    if (!selectedEventId) return;
+    const event = highlightsEvents.find(e => e.id === selectedEventId);
+    if (!event) return;
+    const allImages = [event.image, ...event.gallery];
+    
+    const interval = setInterval(() => {
+      setEventCarouselIndex((prev) => (prev + 1) % allImages.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [selectedEventId]);
+
+  // Reset carousel when event changes
+  useEffect(() => {
+    setEventCarouselIndex(0);
+  }, [selectedEventId]);
 
   const renderEventDetail = (event: Event) => {
+    // Combine main image with gallery images for carousel
+    const allImages = [event.image, ...event.gallery];
+
     return (
-      <div className="min-h-screen py-20 px-6 overflow-y-auto">
+      <div className="min-h-screen pt-20 pb-12 px-6 overflow-y-auto">
         <motion.div
           initial="hidden"
           animate="visible"
@@ -427,10 +606,21 @@ export default function App() {
           {/* Back Button */}
           <motion.button
             variants={itemVariants}
-            onClick={() => setSelectedEventId(null)}
-            className="flex items-center space-x-2 text-white hover:text-[#FF6A00] transition-colors duration-300 mb-8"
+            onClick={() => {
+              setSelectedEventId(null);
+              navigate('/highlights');
+            }}
+            className="relative w-12 h-12 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-300 mb-8 group"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255, 106, 0, 0.6) 0%, rgba(255, 106, 0, 0.2) 100%)',
+              border: '1px solid rgba(255, 106, 0, 0.3)',
+              boxShadow: '0 8px 32px rgba(255, 106, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.2)',
+              marginTop: '2rem'
+            }}
+            whileHover={{ scale: 1.1, boxShadow: '0 12px 40px rgba(255, 106, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3)' }}
+            whileTap={{ scale: 0.95 }}
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-5 h-5 text-white relative z-10 group-hover:text-white transition-colors" />
           </motion.button>
 
           {/* Event Header */}
@@ -438,23 +628,39 @@ export default function App() {
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
               {event.title}
             </h1>
-            <span className="inline-block px-6 py-3 bg-[#FF6A00]/20 text-[#FF6A00] rounded-full border border-[#FF6A00]/30">
+            <span className="text-white/70 text-lg font-medium">
               {event.award}
             </span>
           </motion.div>
 
           {/* Bento Grid Layout */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Large Image Block */}
+            {/* Large Image Block with Carousel */}
             <motion.div variants={itemVariants} className="lg:col-span-2 lg:row-span-2">
               <div className="bg-black/60 backdrop-blur-sm rounded-2xl p-6 border border-[#FF6A00]/20 h-full">
-                <div className="w-full lg:w-[90%] h-auto lg:h-[400px] rounded-2xl overflow-hidden mb-8 mx-auto">
-                  <ImageWithFallback
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-                  />
-                </div>
+                <motion.div 
+                  className="w-full rounded-2xl overflow-hidden mx-auto relative"
+                  style={{
+                    aspectRatio: isMobile ? '5 / 4' : '1 / 1'
+                  }}
+                >
+                  {/* Carousel Images with Fade */}
+                  {allImages.map((img, index) => (
+                    <motion.div
+                      key={index}
+                      className="absolute inset-0"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: index === eventCarouselIndex ? 1 : 0 }}
+                      transition={{ duration: 1 }}
+                    >
+                      <ImageWithFallback
+                        src={img}
+                        alt={`Event image ${index}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </motion.div>
+                  ))}
+                </motion.div>
               </div>
             </motion.div>
 
@@ -483,7 +689,7 @@ export default function App() {
               </div>
             </motion.div>
 
-            {/* Gallery Block - Now Dynamic */}
+            {/* Gallery Block - Performance Gallery */}
             <motion.div variants={itemVariants} className="lg:col-span-3">
               <div className="bg-black/60 backdrop-blur-sm rounded-2xl p-6 border border-[#FF6A00]/20">
                 <h3 className="text-xl font-semibold text-white mb-4">Performance Gallery</h3>
@@ -540,9 +746,8 @@ export default function App() {
               animate="visible"
               className="max-w-5xl mx-auto mobile-center"
             >
-              {/* Semi-transparent black hero card */}
+{/* Semi-transparent glass hero card */}
               <div className="bg-black/60 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-[#FF6A00]/20 shadow-2xl shadow-[#FF6A00]/10 relative overflow-hidden">
-                
                 {/* Header + Intro Group */}
                 <motion.div variants={itemVariants} className="text-center mb-30">
                   <h1 className="text-3xl md:text-6xl lg:text-7xl font-bold text-white mb-4 tracking-tight">
@@ -560,12 +765,16 @@ export default function App() {
                       At our core, we remain a group of friends, dreamers, and believers in music's ability to create memories that last a lifetime.
                     </p>
                     {!isMobile && (
-                      <button 
+                      <motion.button
+                        type="button"
                         onClick={() => setActiveSection('About')}
-                        className="border-2 border-white text-white px-8 py-4 rounded-full hover:bg-[#FF6A00] hover:border-[#FF6A00] transition-all duration-300 shadow-lg shadow-[#FF6A00]/20 font-medium"
+                        className="inline-flex items-center justify-center px-6 py-3 rounded-full text-lg font-semibold text-white shadow-lg shadow-[#FF6A00]/20"
+                        style={glassButtonStyle}
+                        whileHover={{ scale: 1.05, ...glassButtonHoverStyle }}
+                        whileTap={{ scale: 0.96 }}
                       >
                         About Us
-                      </button>
+                      </motion.button>
                     )}
                     <p className="text-xs text-white/70">
                       Based in Davao City, Philippines
@@ -575,7 +784,7 @@ export default function App() {
                   <motion.div variants={itemVariants} className="flex justify-center lg:justify-end items-center">
                     <div className="flex items-center space-x-6">
                       <div className="text-center lg:text-right">
-                        <h2 className="text-xl md:text-3xl font-semibold text-white mb-">
+                        <h2 className="text-xl md:text-3xl font-semibold text-white mb-1">
                           Mark Anthony Babalcon
                         </h2>
                         <p className="text-[#FF6A00] text-lg font-medium">
@@ -597,7 +806,11 @@ export default function App() {
 
                 {/* Photo Group with vignette */}
                 <motion.div variants={itemVariants} className="relative">
-                  <div className="group relative w-full h-64 md:h-80 rounded-2xl overflow-hidden">
+                  <motion.div 
+                    className="group relative w-full rounded-2xl overflow-hidden"
+                    animate={{ aspectRatio: '19 / 6' }}
+                    transition={{ duration: 0.6, ease: 'easeInOut' }}
+                  >
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 z-10 pointer-events-none" />
 
                     <AnimatePresence mode="wait">
@@ -632,7 +845,7 @@ export default function App() {
                         ))}
                       </div>
                     )}
-                  </div>
+                  </motion.div>
                 </motion.div>
               </div>
             </motion.div>
@@ -670,20 +883,28 @@ export default function App() {
                     </h2>
 
                     {/* Place Hosted */}
-                    <div className="text-center mb-2 md:mb-6 lg:mb-8">
-                      <span className="inline-block px-6 py-3 bg-[#FF6A00]/20 text-[#FF6A00] rounded-full text-lg border border-[#FF6A00]/30 font-medium mb-2 md:mb-6 lg:mb-8">
+                    <div className="text-center mb-6 md:mb-8 lg:mb-10">
+                      <span className="text-white/80 text-lg font-normal">
                         {event.award}
                       </span>
                     </div>
 
                     {/* Click to Explore CTA */}
                     <div className="text-center">
-                      <button
-                        onClick={() => setSelectedEventId(event.id)}
-                        className="border-2 border-white text-white px-8 py-4 rounded-full hover:bg-[#FF6A00] hover:border-[#FF6A00] transition-all duration-300 shadow-lg shadow-[#FF6A00]/20 font-medium mb-2 md:mb-6 lg:mb-8"
+                      <motion.button
+                        type="button"
+                        onClick={() => {
+                          setSelectedEventId(event.id);
+                          const slug = generateEventSlug(event.title);
+                          navigate(`/highlights/${slug}`);
+                        }}
+                        className="inline-flex items-center justify-center px-6 py-3 font-semibold rounded-full text-lg text-white mb-2 md:mb-6 lg:mb-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:ring-[#FF6A00]/80"
+                        style={glassButtonStyle}
+                        whileHover={{ scale: 1.05, ...glassButtonHoverStyle }}
+                        whileTap={{ scale: 0.96 }}
                       >
                         Click to Explore
-                      </button>
+                      </motion.button>
                     </div>
                   </motion.div>
                 </motion.div>
@@ -711,7 +932,7 @@ export default function App() {
               {/* Subtitle Box */}
               <motion.div
                 variants={itemVariants}
-                className="bg-black/60 backdrop-blur-sm rounded-2xl border border-[#FF6A00]/20 px-6 py-8 text-center mb-8"
+                className="bg-white/20 backdrop-blur-sm rounded-2xl border border-[#FF6A00]/30 px-6 py-8 text-center mb-8"
               >
                 <p className="text-base md:text-xl text-white/80">
                   A collective voices from Davao City, united by friendship and the timeless magic of music.
@@ -749,7 +970,7 @@ export default function App() {
                 {/* Photo Block */}
                 <motion.div variants={itemVariants} className="lg:col-span-1">
                   <div className="bg-black/60 backdrop-blur-sm rounded-2xl p-4 border border-[#FF6A00]/20 h-full">
-                    <div className="h-64 rounded-xl overflow-hidden">
+                    <div className="rounded-xl overflow-hidden" style={{ aspectRatio: '16 / 10' }}>
                       <ImageWithFallback
                         src="/images/about1.webp"
                         className="w-full h-full object-cover"
@@ -765,11 +986,12 @@ export default function App() {
                 {/* Additional Photo Blocks */}
                 <motion.div variants={itemVariants} className="lg:col-span-1">
                   <div className="bg-black/60 backdrop-blur-sm rounded-2xl p-4 border border-[#FF6A00]/20 h-full">
-                    <div className="h-48 rounded-xl overflow-hidden">
+                    <div className="rounded-xl overflow-hidden" style={{ aspectRatio: '16 / 10' }}>
                       <ImageWithFallback
                         src="/images/about2.webp"
                         alt="Warm-up practice session"
                         className="w-full h-full object-cover"
+                        style={{ transform: 'scale(1.1)' }}
                       />
                     </div>
                     <div className="mt-4">
@@ -817,7 +1039,7 @@ export default function App() {
                 <p className="text-xl md:text-3xl lg:text-5xl text-white/90 leading-tight">
                   Inquire today to save your date.
                 </p>
-                <p className="text-base md:text-lg text-white/80 mt-4">
+                <p className="text-sm md:text-lg text-white/80 mt-4">
                   We would be honored to add warmth and harmony to your occasion. We bring professionalism and heart to every performance, whether it's a mass, a reception, or a corporate gathering.
                 </p>
               </motion.div>
@@ -845,8 +1067,14 @@ export default function App() {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      <div className="w-12 h-12 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 group-hover:border-[#FF6A00]/40 transition-all duration-300">
-                        <Facebook className="w-6 h-6 text-white group-hover:text-[#FF6A00] transition-colors duration-300" />
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{
+                        background: 'linear-gradient(135deg, rgba(255, 106, 0, 0.6) 0%, rgba(255, 106, 0, 0.2) 100%)',
+                        border: '1px solid rgba(255, 106, 0, 0.3)',
+                        boxShadow: '0 8px 32px rgba(255, 106, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.2)',
+                        backdropFilter: 'blur(14px)',
+                        WebkitBackdropFilter: 'blur(14px)'
+                      }}>
+                        <Facebook className="w-5 h-5 text-white group-hover:text-white transition-colors duration-300" />
                       </div>
                     </motion.a>
                     <motion.a
@@ -857,8 +1085,14 @@ export default function App() {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      <div className="w-12 h-12 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 group-hover:border-[#FF6A00]/40 transition-all duration-300">
-                        <Instagram className="w-6 h-6 text-white group-hover:text-[#FF6A00] transition-colors duration-300" />
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{
+                        background: 'linear-gradient(135deg, rgba(255, 106, 0, 0.6) 0%, rgba(255, 106, 0, 0.2) 100%)',
+                        border: '1px solid rgba(255, 106, 0, 0.3)',
+                        boxShadow: '0 8px 32px rgba(255, 106, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.2)',
+                        backdropFilter: 'blur(14px)',
+                        WebkitBackdropFilter: 'blur(14px)'
+                      }}>
+                        <Instagram className="w-5 h-5 text-white group-hover:text-white transition-colors duration-300" />
                       </div>
                     </motion.a>
                   </div>
@@ -870,7 +1104,7 @@ export default function App() {
                 {/* Split Content */}
                 <div className="grid grid-cols-1 md:grid-cols-2">
                   {/* Left: Contact Form */}
-                  <div className="p-8 md:p-12 pb-[220px] md:pb-12">
+                  <div className="p-8 md:p-12">
                     <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                       {/* Name Field */}
                       <div>
@@ -933,8 +1167,9 @@ export default function App() {
                       {/* Submit Button */}
                       <motion.button
                         type="submit"
-                        className="w-full bg-[#FF6A00] hover:bg-[#FF6A00]/80 text-white font-semibold py-4 rounded-lg transition-all duration-300 shadow-lg shadow-[#FF6A00]/30 hover:shadow-[#FF6A00]/50"
-                        whileHover={{ scale: 1.02 }}
+                        className={glassButtonClasses + " w-full"}
+                        style={glassButtonStyle}
+                        whileHover={{ scale: 1.02, ...glassButtonHoverStyle }}
                         whileTap={{ scale: 0.98 }}
                       >
                         SUBMIT
@@ -1002,17 +1237,14 @@ export default function App() {
           className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50"
           aria-hidden={false}
         >
-          <div className="bg-black/60 backdrop-blur-lg rounded-full p-2 border border-[#FF6A00]/20 shadow-2xl">
+          <div className="rounded-full p-2 backdrop-blur-lg shadow-2xl" style={navContainerStyle}>
             <div className="flex space-x-2">
               {nav.map(({ name }) => (
                 <motion.button
                   key={name}
                   onClick={() => { setActiveSection(name); setSelectedEventId(null); }}
-                  className={`px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300 ${
-                    activeSection === name
-                      ? 'bg-[#FF6A00] text-white shadow-lg shadow-[#FF6A00]/50'
-                      : 'text-white hover:bg[#FF6A00]/10 hover:text-[#FF6A00] hover:shadow-lg hover:shadow-[#FF6A00]/20'
-                  }`}
+                  className="relative px-6 py-3 rounded-full text-sm font-semibold text-white shadow-none"
+                  style={activeSection === name ? navButtonStyle : navButtonInactiveStyle}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   aria-current={activeSection === name ? 'page' : undefined}
@@ -1031,7 +1263,7 @@ export default function App() {
           className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50"
           aria-hidden={false}
         >
-          <div className="bg-black/60 backdrop-blur-lg rounded-full p-2 border border-[#FF6A00]/20 shadow-2xl">
+          <div className="rounded-full p-2 backdrop-blur-lg shadow-2xl" style={navContainerStyle}>
             <div className="flex space-x-2">
               {nav.map(({ name, icon: Icon }) => {
                 const active = activeSection === name;
@@ -1039,11 +1271,8 @@ export default function App() {
                   <motion.button
                     key={name}
                     onClick={() => { setActiveSection(name); setSelectedEventId(null); }}
-                    className={`px-6 py-3 rounded-full flex items-center justify-center transition-all duration-300 ${
-                      active
-                        ? 'bg-[#FF6A00] text-white shadow-lg shadow-[#FF6A00]/50'
-                        : 'text-white hover:bg-[#FF6A00]/10 hover:text-[#FF6A00] hover:shadow-lg hover:shadow-[#FF6A00]/20'
-                    }`}
+                    className="relative px-6 py-3 rounded-full flex items-center justify-center text-white shadow-none"
+                    style={active ? navButtonStyle : navButtonInactiveStyle}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     aria-current={active ? 'page' : undefined}
