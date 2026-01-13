@@ -1173,10 +1173,6 @@ export default function App() {
                 initial={{ y: 40, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5, ease: easeInOut, delay: 0.3 }}
-                whileHover={{ 
-                  borderColor: 'rgba(255, 106, 0, 0.4)',
-                  boxShadow: '0 20px 60px rgba(255, 106, 0, 0.12)'
-                }}
               >
                 {/* Split Content */}
                 <div className="grid grid-cols-1 md:grid-cols-2">
@@ -1267,8 +1263,6 @@ export default function App() {
                           onChange={(e) => setUserMessage(e.target.value)}
                           required
                           className="w-full bg-black/40 backdrop-blur-sm border border-[#FF6A00]/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:border-[#FF6A00]/50 focus:outline-none transition-colors duration-300 resize-none"
-                          whileFocus={{ scale: 1.02 }}
-                          transition={{ duration: 0.2 }}
                         />
                       </motion.div>
 
