@@ -10,12 +10,29 @@
     </BrowserRouter>
   );
 
-  // Register service worker for offline caching
+  // Register service worker for offline caching - defer to after paint
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js').catch((error) => {
-        console.log('Service Worker registration failed:', error);
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        navigator.serviceWorker.register('/service-worker.js').catch((error) => {
+          console.log('Service Worker registration failed:', error);
+        });
       });
-    });
+    } else {
+      // Defer using requestIdleCallback or setTimeout
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          navigator.serviceWorker.register('/service-worker.js').catch((error) => {
+            console.log('Service Worker registration failed:', error);
+          });
+        });
+      } else {
+        setTimeout(() => {
+          navigator.serviceWorker.register('/service-worker.js').catch((error) => {
+            console.log('Service Worker registration failed:', error);
+          });
+        }, 2000);
+      }
+    }
   }
   

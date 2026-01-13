@@ -52,6 +52,18 @@
     build: {
       target: 'esnext',
       outDir: 'dist',
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'vendor-core': ['react', 'react-dom', 'react-router-dom'],
+            'vendor-ui': ['framer-motion', '@radix-ui/react-accordion', '@radix-ui/react-dialog'],
+            'vendor-icons': ['lucide-react'],
+            'vendor-email': ['@emailjs/browser'],
+          }
+        }
+      },
+      chunkSizeWarningLimit: 1000,
+      minify: 'esbuild',
     },
     server: {
       port: 3000,

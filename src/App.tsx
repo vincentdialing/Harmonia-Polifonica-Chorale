@@ -1,12 +1,14 @@
 /// <reference types="vite/client" />
 import { easeInOut, motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from "@vercel/speed-insights/react"
 import { ImageWithFallback } from './components/figma/ImageWithFallback';
 import emailjs from '@emailjs/browser';
 import { Mail, Facebook, Instagram, ArrowLeft, Home, Trophy, Users } from 'lucide-react';
+
+// Lazy load analytics components to improve FCP
+const Analytics = lazy(() => import('@vercel/analytics/react').then(m => ({ default: m.Analytics })));
+const SpeedInsights = lazy(() => import('@vercel/speed-insights/react').then(m => ({ default: m.SpeedInsights })));
 
 // Event interface
 interface Event {
@@ -1050,46 +1052,87 @@ export default function App() {
               animate="visible"
               className="w-full max-w-6xl space-y-6"
             >
-              {/* Standalone Heading */}
-              <motion.div variants={itemVariants} className="text-center">
+              {/* Standalone Heading - from bottom */}
+              <motion.div 
+                className="text-center"
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5, ease: easeInOut, delay: 0.1 }}
+              >
                 <h1 className="text-4xl md:text-6xl font-bold text-white">Book Us</h1>
               </motion.div>
 
-              {/* Main Description */}
+              {/* Main Description - from bottom */}
               <motion.div
-                variants={itemVariants}
                 className="bg-black/60 backdrop-blur-sm rounded-2xl border border-[#FF6A00]/20 px-6 py-8 text-center"
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5, ease: easeInOut, delay: 0.15 }}
               >
-                <p className="text-xl md:text-3xl lg:text-5xl text-white/90 leading-tight">
+                <motion.p 
+                  className="text-xl md:text-3xl lg:text-5xl text-white/90 leading-tight"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.5, ease: easeInOut }}
+                >
                   Inquire today to save your date.
-                </p>
-                <p className="text-sm md:text-lg text-white/80 mt-4">
+                </motion.p>
+                <motion.p 
+                  className="text-sm md:text-lg text-white/80 mt-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.5, ease: easeInOut }}
+                >
                   We would be honored to add warmth and harmony to your occasion. We bring professionalism and heart to every performance, whether it's a mass, a reception, or a corporate gathering.
-                </p>
+                </motion.p>
               </motion.div>
 
-              {/* Contact Info Bar */}
+              {/* Contact Info Bar - from bottom */}
               <motion.div
-                variants={itemVariants}
                 className="bg-black/60 backdrop-blur-sm rounded-2xl border border-[#FF6A00]/20 px-6 py-4"
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5, ease: easeInOut, delay: 0.2 }}
               >
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                   {/* Contact Info - Left Side */}
                   <div className="flex flex-col md:flex-row items-center gap-6 md:gap-12 text-white/80 text-lg text-center md:text-left">
-                    <span>hpcsingers@gmail.com</span>
-                    <span className="hidden md:block">•</span>
-                    <span>+63 635 570 685</span>
+                    <motion.span 
+                      initial={{ y: 30, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.25, duration: 0.5, ease: easeInOut }}
+                      className="text-white"
+                    >
+                      hpcsingers@gmail.com
+                    </motion.span>
+                    <motion.span 
+                      className="hidden md:block text-white"
+                      initial={{ y: 30, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.3, duration: 0.5, ease: easeInOut }}
+                    >
+                      •
+                    </motion.span>
+                    <motion.span 
+                      initial={{ y: 30, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.35, duration: 0.5, ease: easeInOut }}
+                      className="text-white"
+                    >
+                      +63 635 570 685
+                    </motion.span>
                   </div>
 
-                  {/* Social Icons - Right Edge */}
+                  {/* Social Icons - Right Edge - from bottom */}
                   <div className="flex items-center gap-4">
                     <motion.a
                       href="https://www.facebook.com/profile.php?id=100086396621687"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
+                      initial={{ y: 30, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.25, duration: 0.4, ease: easeInOut }}
                     >
                       <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{
                         background: 'linear-gradient(135deg, rgba(255, 106, 0, 0.6) 0%, rgba(255, 106, 0, 0.2) 100%)',
@@ -1106,8 +1149,9 @@ export default function App() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
+                      initial={{ y: 40, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.3, duration: 0.4, ease: easeInOut }}
                     >
                       <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{
                         background: 'linear-gradient(135deg, rgba(255, 106, 0, 0.6) 0%, rgba(255, 106, 0, 0.2) 100%)',
@@ -1123,17 +1167,35 @@ export default function App() {
                 </div>
               </motion.div>
 
-              {/* Main Glass Card Container */}
-              <motion.div variants={itemVariants} className="bg-black/60 backdrop-blur-sm rounded-2xl border border-[#FF6A00]/20 overflow-hidden">
+              {/* Main Glass Card Container - from bottom */}
+              <motion.div 
+                className="bg-black/60 backdrop-blur-sm rounded-2xl border border-[#FF6A00]/20 overflow-hidden"
+                initial={{ y: 40, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5, ease: easeInOut, delay: 0.3 }}
+                whileHover={{ 
+                  borderColor: 'rgba(255, 106, 0, 0.4)',
+                  boxShadow: '0 20px 60px rgba(255, 106, 0, 0.12)'
+                }}
+              >
                 {/* Split Content */}
                 <div className="grid grid-cols-1 md:grid-cols-2">
                   {/* Left: Contact Form */}
-                  <div className="p-8 md:p-12">
+                  <motion.div 
+                    className="p-8 md:p-12"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.35, duration: 0.3, ease: easeInOut }}
+                  >
                     <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
-                      {/* Name Field */}
-                      <div>
+                      {/* Name Field - from bottom */}
+                      <motion.div
+                        initial={{ y: 30, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.4, duration: 0.4, ease: easeInOut }}
+                      >
                         <label className="block text-white/70 text-sm mb-2">Name</label>
-                        <input
+                        <motion.input
                           name="name"
                           type="text"
                           placeholder="Juan Dela Cruz"
@@ -1141,15 +1203,20 @@ export default function App() {
                           onChange={(e) => setUserName(e.target.value)}
                           required
                           className="w-full bg-black/40 backdrop-blur-sm border border-[#FF6A00]/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:border-[#FF6A00]/50 focus:outline-none transition-colors duration-300"
+                          whileFocus={{ scale: 1.02 }}
+                          transition={{ duration: 0.2 }}
                         />
-                        {/* keep a compatibility field if your EmailJS template expects `from_name` */}
                         <input type="hidden" name="from_name" value={userName} />
-                      </div>
+                      </motion.div>
 
-                      {/* Email Field */}
-                      <div>
+                      {/* Email Field - from bottom */}
+                      <motion.div
+                        initial={{ y: 35, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.45, duration: 0.4, ease: easeInOut }}
+                      >
                         <label className="block text-white/70 text-sm mb-2">Email</label>
-                        <input
+                        <motion.input
                           name="from_email"
                           type="email"
                           placeholder="email@address.com"
@@ -1157,17 +1224,21 @@ export default function App() {
                           onChange={(e) => setUserEmail(e.target.value)}
                           required
                           className="w-full bg-black/40 backdrop-blur-sm border border-[#FF6A00]/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:border-[#FF6A00]/50 focus:outline-none transition-colors duration-300"
+                          whileFocus={{ scale: 1.02 }}
+                          transition={{ duration: 0.2 }}
                         />
-                        {/* Provide reply_to for EmailJS reply handling and compatibility with templates using `{{email}}` */}
                         <input type="hidden" name="reply_to" value={userEmail} />
-                        {/* Some EmailJS templates use `{{email}}` as the reply placeholder — include it too */}
                         <input type="hidden" name="email" value={userEmail} />
-                      </div>
+                      </motion.div>
 
-                      {/* Phone Field */}
-                      <div>
+                      {/* Phone Field - from bottom */}
+                      <motion.div
+                        initial={{ y: 40, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.5, duration: 0.4, ease: easeInOut }}
+                      >
                         <label className="block text-white/70 text-sm mb-2">Mobile Number</label>
-                        <input
+                        <motion.input
                           name="phone"
                           type="tel"
                           placeholder="0917 123 4567"
@@ -1175,15 +1246,20 @@ export default function App() {
                           onChange={(e) => setUserPhone(e.target.value)}
                           required
                           className="w-full bg-black/40 backdrop-blur-sm border border-[#FF6A00]/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:border-[#FF6A00]/50 focus:outline-none transition-colors duration-300"
+                          whileFocus={{ scale: 1.02 }}
+                          transition={{ duration: 0.2 }}
                         />
-                        {/* Also include phone for templates expecting `phone_number` */}
                         <input type="hidden" name="phone_number" value={userPhone} />
-                      </div>
+                      </motion.div>
 
-                      {/* Message Field */}
-                      <div>
+                      {/* Message Field - from bottom */}
+                      <motion.div
+                        initial={{ y: 45, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.55, duration: 0.4, ease: easeInOut }}
+                      >
                         <label className="block text-white/70 text-sm mb-2">Message</label>
-                        <textarea
+                        <motion.textarea
                           name="message"
                           rows={4}
                           placeholder="Hello..."
@@ -1191,35 +1267,45 @@ export default function App() {
                           onChange={(e) => setUserMessage(e.target.value)}
                           required
                           className="w-full bg-black/40 backdrop-blur-sm border border-[#FF6A00]/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:border-[#FF6A00]/50 focus:outline-none transition-colors duration-300 resize-none"
+                          whileFocus={{ scale: 1.02 }}
+                          transition={{ duration: 0.2 }}
                         />
-                      </div>
+                      </motion.div>
 
-                      {/* Submit Button */}
+                      {/* Submit Button - from bottom */}
                       <motion.button
                         type="submit"
                         className={glassButtonClasses + " w-full"}
                         style={glassButtonStyle}
+                        initial={{ y: 50, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.6, duration: 0.4, ease: easeInOut }}
                         whileHover={{ scale: 1.02, ...glassButtonHoverStyle }}
-                        whileTap={{ scale: 0.98 }}
+                        whileTap={{ scale: 0.95 }}
                       >
                         SUBMIT
                       </motion.button>
                     </form>
-                  </div>
+                  </motion.div>
 
                   {/* Right: Portrait and Social Media */}
-                  <div className="hidden md:block relative">
+                  <motion.div 
+                    className="hidden md:block relative"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.4, duration: 0.4, ease: easeInOut }}
+                  >
                     <div className="h-full relative overflow-hidden md:rounded-r-2xl">
                       <ImageWithFallback
                         src="/images/contactPortrait.webp"
-                          alt="Harmonia Polifonica Chorale portrait"
-                          className="w-full h-full min-h-[500px] md:min-h-[600px] object-cover"
-                        />
+                        alt="Harmonia Polifonica Chorale portrait"
+                        className="w-full h-full min-h-[500px] md:min-h-[600px] object-cover"
+                      />
                       
                       {/* Dark overlay for better text visibility */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
               </motion.div>
             </motion.div>
@@ -1316,8 +1402,10 @@ export default function App() {
           </div>
         </motion.nav>
       )}
-      <Analytics />
-      <SpeedInsights />
+      <Suspense fallback={null}>
+        <Analytics />
+        <SpeedInsights />
+      </Suspense>
     </div>
   );
 }
