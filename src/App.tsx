@@ -1134,15 +1134,14 @@ export default function App() {
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.25, duration: 0.4, ease: easeInOut }}
                     >
-                      <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{
-                        background: 'linear-gradient(135deg, rgba(255, 106, 0, 0.6) 0%, rgba(255, 106, 0, 0.2) 100%)',
-                        border: '1px solid rgba(255, 106, 0, 0.3)',
-                        boxShadow: '0 8px 32px rgba(255, 106, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.2)',
-                        backdropFilter: 'blur(14px)',
-                        WebkitBackdropFilter: 'blur(14px)'
-                      }}>
-                        <Facebook className="w-5 h-5 text-white group-hover:text-white transition-colors duration-300" />
-                      </div>
+                      <motion.div
+                        className="w-12 h-12 rounded-full flex items-center justify-center"
+                        style={glassButtonStyle}
+                        whileHover={{ scale: 1.05, ...glassButtonHoverStyle }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Facebook className="w-5 h-5 text-white transition-colors duration-300" />
+                      </motion.div>
                     </motion.a>
                     <motion.a
                       href="https://www.instagram.com/usephpc/"
@@ -1153,15 +1152,14 @@ export default function App() {
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.3, duration: 0.4, ease: easeInOut }}
                     >
-                      <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{
-                        background: 'linear-gradient(135deg, rgba(255, 106, 0, 0.6) 0%, rgba(255, 106, 0, 0.2) 100%)',
-                        border: '1px solid rgba(255, 106, 0, 0.3)',
-                        boxShadow: '0 8px 32px rgba(255, 106, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.2)',
-                        backdropFilter: 'blur(14px)',
-                        WebkitBackdropFilter: 'blur(14px)'
-                      }}>
-                        <Instagram className="w-5 h-5 text-white group-hover:text-white transition-colors duration-300" />
-                      </div>
+                      <motion.div
+                        className="w-12 h-12 rounded-full flex items-center justify-center"
+                        style={glassButtonStyle}
+                        whileHover={{ scale: 1.05, ...glassButtonHoverStyle }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Instagram className="w-5 h-5 text-white transition-colors duration-300" />
+                      </motion.div>
                     </motion.a>
                   </div>
                 </div>
@@ -1273,8 +1271,8 @@ export default function App() {
                         style={glassButtonStyle}
                         initial={{ y: 50, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.6, duration: 0.4, ease: easeInOut }}
-                        whileHover={{ scale: 1.02, ...glassButtonHoverStyle }}
+                        transition={{ delay: 0, duration: 0.05, ease: easeInOut }}
+                        whileHover={{ scale: 1.05, ...glassButtonHoverStyle }}
                         whileTap={{ scale: 0.95 }}
                       >
                         SUBMIT
